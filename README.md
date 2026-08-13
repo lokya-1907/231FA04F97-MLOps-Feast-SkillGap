@@ -7,7 +7,7 @@ A simple Feast-based feature store for analyzing curriculum–industry skill gap
 | Field | Value |
 |---|---|
 | Name | Lokya Lochana Pothuru |
-| Register Number | 231FA04F97 |
+| Registration Number | 231FA04F97 |
 | Section | 3 |
 
 ## Problem Statement
