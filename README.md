@@ -340,30 +340,60 @@ The Logistic Regression model was trained using Feast historical features.
 Model accuracy: 0.9000
 ```
 
-### Online feature output
+### Online Feature Output
 
-Online features were retrieved from the SQLite online store after materialization.
+After materialization, Feast loaded the engineered feature values from the offline Parquet source into the SQLite online store.
 
-Example entity used for online retrieval:
+The online features were retrieved for the following entity:
 
-```text
-student_id = S080
+| Entity | Value |
+|---|---|
+| `student_id` | `S080` |
+
+The feature retrieval was performed using:
+
+```python
+online_data = store.get_online_features(
+    features=feature_refs,
+    entity_rows=[
+        {
+            "student_id": "S080"
+        }
+    ],
+).to_dict()
 ```
 
-The online feature output was:
+The retrieved online feature output is shown below:
+
+| Feature | Retrieved value |
+|---|---:|
+| `student_id` | `S080` |
+| `internship_months` | 4 |
+| `industry_skill_average` | 1.6 |
+| `projects_completed` | 4 |
+| `sql_gap` | -1.0 |
+| `certification_score` | 0.5 |
+| `industry_experience_score` | 0.166667 |
+| `python_gap` | 1.0 |
+| `cloud_gap` | 0.0 |
+| `internship_experience_score` | 0.333333 |
+
+The output contained 16 columns in total. Pandas abbreviated some columns with `...` when displaying the dataframe:
 
 ```text
-  student_id  internship_months  industry_skill_average  projects_completed  \
-0       S080                  4                      1.6                   4
+student_id  internship_months  industry_skill_average  projects_completed  \
+S080        4                  1.6                      4
 
-   sql_gap  ...  certification_score  industry_experience_score  python_gap  \
-0     -1.0  ...                  0.5                   0.166667         1.0
+sql_gap  ...  certification_score  industry_experience_score  python_gap  \
+-1.0     ...  0.5                  0.166667                    1.0
 
-   cloud_gap  internship_experience_score
-0        0.0                    0.333333
+cloud_gap  internship_experience_score
+0.0        0.333333
 
 [1 rows x 16 columns]
 ```
+
+The online feature retrieval successfully returned the latest materialized feature values for student `S080`. These values were then passed to the trained Logistic Regression model for prediction.
 
 ### Final prediction
 
